@@ -9,9 +9,12 @@ const port = process.env.PORT || 4000;
 
 app.use(express.json());
 app.use(cors());
+app.use('/images', express.static('upload/images'));
+
+
 
 // Database Connection With MongoDB
-mongoose.connect("mongodb://localhost:27017/e-commerce");
+mongoose.connect("mongodb+srv://Sravani:hEDNxRa4E1jxsj6Y@eyp5.e9hpd2l.mongodb.net/ecommerceDB");
 
 // paste your mongoDB Connection string above with password
 // password should not contain '@' special character
@@ -208,29 +211,58 @@ app.post('/getcart', fetchuser, async (req, res) => {
 })
 
 
+
 // Create an endpoint for adding products using admin panel
 app.post("/addproduct", async (req, res) => {
-  let products = await Product.find({});
-  let id;
-  if (products.length > 0) {
-    let last_product_array = products.slice(-1);
-    let last_product = last_product_array[0];
-    id = last_product.id + 1;
+  try {
+    const products = await Product.find({}).sort({ id: -1 }); // Sort by id descending
+
+    let id = 1;
+    if (products.length > 0) {
+      const last_product = products[0]; // Because sorted
+      console.log("Last product found:", last_product); // 🐞 Debug
+
+      if (!last_product.id || isNaN(last_product.id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid last product ID in DB",
+        });
+      }
+
+      id = Number(last_product.id) + 1;
+    }
+
+    // Validate price fields
+    const newPrice = Number(req.body.new_price);
+    const oldPrice = Number(req.body.old_price);
+    if (isNaN(newPrice) || isNaN(oldPrice)) {
+      return res.status(400).json({
+        success: false,
+        message: "Price fields must be valid numbers",
+      });
+    }
+
+    const product = new Product({
+      id: id,
+      name: req.body.name,
+      description: req.body.description,
+      image: req.body.image,
+      category: req.body.category,
+      new_price: newPrice,
+      old_price: oldPrice,
+    });
+
+    await product.save();
+    console.log("✅ Product Saved:", product);
+    res.json({ success: true, name: req.body.name });
+
+  } catch (err) {
+    console.error("❌ Add Product Error:", err);
+    res.status(500).json({ success: false, message: err.message });
   }
-  else { id = 1; }
-  const product = new Product({
-    id: id,
-    name: req.body.name,
-    description: req.body.description,
-    image: req.body.image,
-    category: req.body.category,
-    new_price: req.body.new_price,
-    old_price: req.body.old_price,
-  });
-  await product.save();
-  console.log("Saved");
-  res.json({ success: true, name: req.body.name })
 });
+
+
 
 
 // Create an endpoint for removing products using admin panel

@@ -1,4 +1,4 @@
-.new-collections{
+/* .new-collections{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,12 +16,75 @@
     border-radius: 10px;
     background: #252525;
   }
-.collections{
-    width: 100%;
+  .collections {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    margin: 60px auto;
     gap: 30px;
-    max-width: 1280px;
-}
+    justify-content: center;
+    padding: 20px 10px;
+  }
+   */
+   .new-collections {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 60px 0;
+  }
+  
+  .new-collections h1 {
+    font-size: 36px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  
+  .new-collections hr {
+    width: 120px;
+    height: 3px;
+    background-color: #333;
+    border: none;
+    margin-top: 10px;
+  }
+  
+  /* Grid container for brands */
+  .collections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 40px;
+    padding: 0 20px;
+  }
+  
+  /* Individual brand card */
+  .brand-box {
+    text-align: center;
+    border: 1px solid #eaeaea;
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .brand-box img {
+    width: 100%;
+    max-height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .brand-box p {
+    margin-top: 12px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .brand-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  
